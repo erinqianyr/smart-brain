@@ -22,8 +22,15 @@ class Register extends React.Component {
     this.setState({password: event.target.value})
   }
 
-  onSubmitSignIn = () => {
-    fetch('http://localhost:3000/register', {
+  handleKeyPress = (event) => {
+    var code = event.keyCode || event.which;
+    if(code === 13) { //13 is the enter keycode
+        this.onSubmitRegister();
+    }
+  }
+
+  onSubmitRegister = () => {
+    fetch('https://smart-brain-321.herokuapp.com/register', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -35,8 +42,9 @@ class Register extends React.Component {
       .then(response => response.json())
       .then(user => {
         if (user.id) {
-          this.props.loadUser(user)
-          this.props.onRouteChange('home');
+          this.props.onRouteChange('signin');
+        } else{
+          this.refs.error.innerHTML = "*"+user;
         }
       })
   }
@@ -49,6 +57,9 @@ class Register extends React.Component {
             <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
               <legend className="f1 fw6 ph0 mh0">Register</legend>
               <div className="mt3">
+                <label className="f7 dark-red" ref="error"></label>
+              </div>
+              <div className="mt3">
                 <label className="db fw6 lh-copy f6" htmlFor="name">Name</label>
                 <input
                   className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
@@ -56,6 +67,7 @@ class Register extends React.Component {
                   name="name"
                   id="name"
                   onChange={this.onNameChange}
+                  onKeyPress={this.handleKeyPress}
                 />
               </div>
               <div className="mt3">
@@ -66,6 +78,7 @@ class Register extends React.Component {
                   name="email-address"
                   id="email-address"
                   onChange={this.onEmailChange}
+                  onKeyPress={this.handleKeyPress}
                 />
               </div>
               <div className="mv3">
@@ -76,12 +89,13 @@ class Register extends React.Component {
                   name="password"
                   id="password"
                   onChange={this.onPasswordChange}
+                  onKeyPress={this.handleKeyPress}
                 />
               </div>
             </fieldset>
             <div className="">
               <input
-                onClick={this.onSubmitSignIn}
+                onClick={this.onSubmitRegister}
                 className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
                 type="submit"
                 value="Register"

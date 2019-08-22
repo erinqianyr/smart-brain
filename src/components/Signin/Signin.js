@@ -17,8 +17,15 @@ class Signin extends React.Component {
     this.setState({signInPassword: event.target.value})
   }
 
+  handleKeyPress = (event) => {
+    var code = event.keyCode || event.which;
+    if(code === 13) { //13 is the enter keycode
+        this.onSubmitSignIn();
+    }
+  }
+
   onSubmitSignIn = () => {
-    fetch('http://localhost:3000/signin', {
+    fetch('https://smart-brain-321.herokuapp.com/signin', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -31,6 +38,8 @@ class Signin extends React.Component {
         if (user.id) {
           this.props.loadUser(user)
           this.props.onRouteChange('home');
+        } else{
+          this.refs.error.innerHTML = "*"+user;
         }
       })
   }
@@ -44,6 +53,9 @@ class Signin extends React.Component {
             <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
               <legend className="f1 fw6 ph0 mh0">Sign In</legend>
               <div className="mt3">
+                <label className="f7 dark-red" ref="error"></label>
+              </div>
+              <div className="mt3">
                 <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
                 <input
                   className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
@@ -51,6 +63,7 @@ class Signin extends React.Component {
                   name="email-address"
                   id="email-address"
                   onChange={this.onEmailChange}
+                  onKeyPress={this.handleKeyPress}
                 />
               </div>
               <div className="mv3">
@@ -61,6 +74,7 @@ class Signin extends React.Component {
                   name="password"
                   id="password"
                   onChange={this.onPasswordChange}
+                  onKeyPress={this.handleKeyPress}
                 />
               </div>
             </fieldset>
