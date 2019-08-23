@@ -74,9 +74,19 @@ class App extends Component {
     console.log(this.state.input);
   }
 
+  // const proxyurl = "https://cors-anywhere.herokuapp.com/";
+  // const url = "https://example.com"; // site that doesn’t send Access-Control-*
+  // fetch(proxyurl + url) // https://cors-anywhere.herokuapp.com/https://example.com
+  // .then(response => response.text())
+  // .then(contents => console.log(contents))
+  // .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
+
+
   onButtonSubmit = () => {
     this.setState({imageUrl: this.state.input});
-      fetch('https://smart-brain-321.herokuapp.com/imageurl', {
+    const proxyurl = "https://cors-anywhere.herokuapp.com/";
+    const url = "https://smart-brain-321-server.herokuapp.com/imageurl";
+      fetch(proxyurl + url, {
         method: 'post',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
@@ -86,7 +96,7 @@ class App extends Component {
       .then(response => response.json())
       .then(response => {
         if (response) {
-          fetch('https://smart-brain-321.herokuapp.com/image', {
+          fetch('https://smart-brain-321-server.herokuapp.com/image', {
             method: 'put',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
